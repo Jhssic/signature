@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(uuid())
   name      String
   email     String   @unique
   password  String
@@ -17,14 +17,18 @@ model User {
   position  String?
   phone     String?
   location  String?
+<<<<<<< HEAD
+=======
+  reports   Report[]
+>>>>>>> ea0738f225b2c5b05a7929cbd05660e43808ad92
 }
 
 model Report {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(uuid())
   title       String
   description String?
   content     String?
-  author      String   @db.ObjectId
+  author      String
   department  String?
   type        String?
   status      String?
@@ -32,7 +36,7 @@ model Report {
 }
 
 model Signature {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  id              String   @id @default(uuid())
   documentTitle   String
   signer          String
   signerEmail     String
