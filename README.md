@@ -1,11 +1,12 @@
 # Signature Application
 
-This project contains a Next.js frontend and an Express backend for a digital signature application.
+This project contains a Next.js frontend and an Express backend for a digital signature application. The database runs locally and is accessed via Prisma using PostgreSQL.
 
 ## Prerequisites
 
 - **Node.js 18** or newer with **npm**.
-- A local or remote **MongoDB** server accessible to the application.
+- A local **MongoDB** server accessible to the application.
+- A local **PostgreSQL** server used by Prisma to manage the database connection.
 
 ## Installation
 
@@ -32,8 +33,10 @@ cp .env.example .env
 ```
 
 The available variables are documented in `.env.example`.
-Prisma uses `DATABASE_URL` to connect to your MongoDB instance. You can reuse the
-same value as `MONGODB_URI`.
+Prisma uses `DATABASE_URL` to connect to the local PostgreSQL instance. The default
+value (`postgresql://localhost:5432/digital-signature`) should point to your local Postgres database.
+
+All database operations performed through Prisma run against this local PostgreSQL instance.
 
 ## Seeding the database
 
@@ -43,13 +46,13 @@ After configuring the environment variables, you can populate the database with 
 node scripts/seed.js
 ```
 
-If you prefer using Prisma to inspect the database, run:
+If you prefer using Prisma to inspect the Postgres database, run:
 
 ```bash
 npx prisma studio
 ```
 
-This connects to the database defined by `MONGODB_URI` and inserts example users and reports.
+This opens Prisma Studio connected via `DATABASE_URL` to your local Postgres database.
 
 ## Running the application
 
