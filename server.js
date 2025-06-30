@@ -6,14 +6,7 @@ import helmet from "helmet"
 import rateLimit from "express-rate-limit"
 import morgan from "morgan"
 
-// Importar rotas
-import authRoutes from "./routes/auth.js"
-import employeeRoutes from "./routes/employees.js"
-import reportRoutes from "./routes/reports.js"
-import signatureRoutes from "./routes/signatures.js"
-import dashboardRoutes from "./routes/dashboard.js"
-
-// Importar middlewares
+// Importar middlewares primeiro
 import { errorHandler } from "./middleware/errorHandler.js"
 import { authenticateToken } from "./middleware/auth.js"
 
@@ -53,14 +46,48 @@ mongoose
   .then(() => console.log("✅ Conectado ao MongoDB"))
   .catch((err) => console.error("❌ Erro ao conectar ao MongoDB:", err))
 
-// Rotas públicas
-app.use("/api/auth", authRoutes)
+// Importar rotas APÓS configurar middlewares
+console.log("Importando rotas...")
 
-// Rotas protegidas
-app.use("/api/employees", authenticateToken, employeeRoutes)
-app.use("/api/reports", authenticateToken, reportRoutes)
-app.use("/api/signatures", authenticateToken, signatureRoutes)
-app.use("/api/dashboard", authenticateToken, dashboardRoutes)
+try {
+  const authRoutes = await import("./routes/auth.js")
+  console.log("Registrando rota: /api/auth")
+  app.use("/api/auth", authRoutes.default)
+} catch (error) {
+  console.error("❌ Erro ao importar auth routes:", error.message)
+}
+
+try {
+  const employeeRoutes = await import("./routes/employees.js")
+  console.log("Registrando rota: /api/employees")
+  app.use("/api/employees", authenticateToken, employeeRoutes.default)
+} catch (error) {
+  console.error("❌ Erro ao importar employee routes:", error.message)
+}
+
+try {
+  const reportRoutes = await import("./routes/reports.js")
+  console.log("Registrando rota: /api/reports")
+  app.use("/api/reports", authenticateToken, reportRoutes.default)
+} catch (error) {
+  console.error("❌ Erro ao importar report routes:", error.message)
+}
+
+try {
+  const signatureRoutes = await import("./routes/signatures.js")
+  console.log("Registrando rota: /api/signatures")
+  app.use("/api/signatures", authenticateToken, signatureRoutes.default)
+} catch (error) {
+  console.error("❌ Erro ao importar signature routes:", error.message)
+}
+
+try {
+  const dashboardRoutes = await import("./routes/dashboard.js")
+  console.log("Registrando rota: /api/dashboard")
+  app.use("/api/dashboard", authenticateToken, dashboardRoutes.default)
+} catch (error) {
+  console.error("❌ Erro ao importar dashboard routes:", error.message)
+}
 
 // Rota de teste
 app.get("/api/health", (req, res) => {

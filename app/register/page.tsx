@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Shield, Eye, EyeOff } from "lucide-react"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Shield, Eye, EyeOff } from "lucide-react";
 
 export default function RegisterPage() {
-  const router = useRouter()
-  const [showPassword, setShowPassword] = useState(false)
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,44 +20,44 @@ export default function RegisterPage() {
     position: "",
     phone: "",
     location: "",
-  })
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target
-    setFormData((prev) => ({ ...prev, [id]: value }))
-  }
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      const res = await fetch("/api/auth/register", {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Token não encontrado. Faça login antes de cadastrar.");
+      }
+
+      const res = await fetch("http://localhost:5000/api/employees", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
-      })
+      });
 
       if (!res.ok) {
-        const error = await res.json()
-        throw new Error(error.message || "Erro ao registrar")
+        const error = await res.json();
+        throw new Error(error.message || "Erro ao registrar");
       }
 
-      const data = await res.json()
-      if (data.token) {
-        if (typeof window !== "undefined") {
-          localStorage.setItem("token", data.token)
-        }
-        router.push("/dashboard")
-      }
+      const data = await res.json();
+      alert(data.message || "Cadastro realizado com sucesso");
+      router.push("/dashboard");
     } catch (error) {
-      console.error("Erro ao registrar:", error)
-      if (typeof window !== "undefined") {
-        alert("Falha no cadastro: " + (error as Error).message)
-      }
+      console.error("Erro ao registrar:", error);
+      alert("Falha no cadastro: " + (error as Error).message);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
@@ -120,6 +120,5 @@ export default function RegisterPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-
