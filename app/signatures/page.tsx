@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 import { Shield, Search, CheckCircle, XCircle, Clock, FileText, Calendar, User, Key, AlertTriangle } from "lucide-react"
 import { Navbar } from "@/components/navbar"
 
@@ -219,8 +220,8 @@ export default function SignaturesPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 ml-4">
-                    <Button variant="outline" size="sm">
-                      Verificar
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/signatures/verify/${signature.id}`}>Verificar</Link>
                     </Button>
                     <Button variant="ghost" size="sm">
                       <FileText className="h-4 w-4" />
