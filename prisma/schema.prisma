@@ -17,7 +17,6 @@ model User {
   position  String?
   phone     String?
   location  String?
-  reports   Report[] @relation(fields: [id], references: [author])
 }
 
 model Report {
