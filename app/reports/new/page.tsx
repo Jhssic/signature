@@ -1,5 +1,15 @@
 "use client"
 
+import { Navbar } from "@/components/navbar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+
+export default function NewReportPage() {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
@@ -50,6 +60,21 @@ export default function NewReportPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
+
+      <div className="container mx-auto p-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Novo Relatório</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Input placeholder="Título" required />
+              <Textarea placeholder="Descrição" />
+              <Button type="submit">Salvar</Button>
+            </form>
+          </CardContent>
+        </Card>
+
       <div className="container mx-auto p-6 max-w-2xl">
         <h1 className="text-3xl font-bold mb-6 text-gray-900">Novo Relatório</h1>
         <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg shadow">
@@ -100,8 +125,8 @@ export default function NewReportPage() {
           </div>
           <Button type="submit" className="w-full">Criar Relatório</Button>
         </form>
+
       </div>
     </div>
   )
 }
-
